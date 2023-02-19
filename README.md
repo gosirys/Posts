@@ -12,6 +12,8 @@ Some content can be relatively outdated as could date as far as the pre-2010 era
 # Contents
 
 ## [01. Turning a Blind SQLi into Union-based with a 2-in-1 Payload](https://github.com/gosirys/Posts/blob/master/Turning-a-Blind-SQLi-into-Union-based-with-a-2-in-1-Payload.md)
-How being not lucid made me want to turn Boolean Blind SQL Injection into a Union-based SQL injection by crafting a 2-in-1 payload, by using the results from the first injected query as the actual final payload for the 2nd query.
+How not being lucid made me want to turn and exploit an SQL Injection from Boolean-Blind to Union-based by crafting a 2-in-1 Payload.
+ 
+The exploit was accomplished by leveraging a first SQL Injection to alter and weaponize the output of the first vulnerable into a carrier for a 2nd SQL Injection on a second vulnerable query all through a single injection point (parameter) - hence the *2-in-1 Payload*.
 
-## Next in line: Chaining multiple vulnerabilies to get RCE via Black-Box Testing
+## Next in line: Chaining multiple vulnerabilies to get RCE on a Commercial Software via Black-Box Testing
