@@ -2,6 +2,8 @@
 ### References
 Exploit-DB Mirror: https://www.exploit-db.com/exploits/17170
  
+Original discovery date: 14/04/2011
+ 
 Vulnerable App: EZ-Shop v1.02
  
 App Download link: https://www.exploit-db.com/apps/0cabe6f3b8ac243bc856e38f42e6baf1-ecommerce-installer-fc-1.0.2.zip
@@ -16,7 +18,7 @@ EZ-Shop ~~is~~ was prone to SQL Injection due to insufficient user-input sanitiz
 
 The vulnerability could have just been exploited as a Boolean Blind SQL Injection, but why being so boring and unoriginal when with a bit of creativity we can do something way fancier, complicated and literally overkill it?
 
-What follows is a writeup of how *being high* drove me to turn a Boolean Blind SQL Injection into a Union-Based SQL Injection using a *two-in-one* Payload. The 1st payload targeting the 1st vulnerable query and turning it into the carrier for the 2nd payload targeting the 2nd vulnerable query, which unlike the first query could be exploited via a union-based SQL Injection.
+What follows is a writeup of how *being high* drove me to turn a Boolean Blind SQL Injection into a Union-Based SQL Injection using a *two-in-one* Payload. The 1st payload targeting the 1st vulnerable query and turning it into the carrier for the 2nd payload targeting the 2nd vulnerable query, which unlike the first query could be exploited via a Union-based SQL Injection.
 
 ### 1st SQL Injection 
 Below follows the incriminated PHP code:
@@ -64,7 +66,7 @@ $speid=$_REQUEST['specialid'];
 $sql="select * from tblprodgiftideas where intgiftideaid='$speid'";
 ```
 
-As it will be shown, the results of this query do not get printed on screen, however, should the query return records the app would later on display them on screen - leaving the only exploitable as *Inferential* SQL Injection, more specifically, of the *Boolean Blind* kind.
+As it will be shown, the results of this query do not get printed on screen, however, should the query return records the app would later on display other data coming from other SQL queries on screen - leaving this only exploitable as *Inferential* SQL Injection, more specifically, of the *Boolean Blind* kind.
 
 ### 2nd SQL Injection
 By further looking into the code we can see that the results of *query1* get stored in the `$prid` parameter:
@@ -143,11 +145,10 @@ $resprname1=$resprname1[0]['varprodname'];
 
 If we want both injections to work, we need to select 3 columns in the first payload, and 5 in the second, as the two queries were made to two different tables.
 
-So how do go about when we can only inject **1** parameter, and our payload has to:
+So how do we go about when we can only inject **1** parameter, and our payload has to:
 1. inject the first query to get it to produce a payload for the 2nd query
 2. at the same time, has the correct syntax and match the number of columns in the union statement on 2 different queries and 2 different tables 
 
-The first query would require a *union query* selecting exactly *3 columns*. From the row returned, the 3rd column is the one inserted in the second query, this would turn into our carrier for the second payload.
 
 #### Exploiting in reverse 
 To better understand the flow of what will follow, I'll start from the end-goal (final injection) and reconstruct the steps required in reverse order. We will assume the goal of this exploit is 
